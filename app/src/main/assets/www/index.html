@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Exercise — Mobile Study &amp; Quiz App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(155deg, #065f46 0%, #0d9488 46%, #1d4ed8 100%);
+      background-attachment: fixed;
+      color: #172554;
+      line-height: 1.5;
+      padding-bottom: 84px;
+    }
+
+    /* Compact Sticky App Header */
+    .app-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(6, 78, 59, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(254, 249, 195, 0.28);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fef9c3;
+      letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: #bfdbfe;
+      font-weight: 500;
+    }
+
+    .screen {
+      display: none;
+      padding: 14px 14px 18px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    /* Slightly Yellow Content Plate with Deep Blue Typography */
+    .plate-card {
+      display: block;
+      text-decoration: none;
+      background: #fef9c3;
+      color: #172554;
+      border: 1px solid #fde047;
+      border-radius: 14px;
+      padding: 15px 16px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16);
+      transition: transform 0.14s ease, background-color 0.14s ease;
+    }
+    a.plate-card:active {
+      transform: scale(0.985);
+      background: #fef08a;
+    }
+
+    .hero-plate {
+      background: #fef9c3;
+      color: #172554;
+      border: 1.5px solid #fde047;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+      margin-bottom: 14px;
+    }
+    .hero-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e40af;
+      margin-bottom: 4px;
+    }
+    .hero-plate h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #172554;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero-plate p {
+      font-size: 14px;
+      color: #1e3a8a;
+      margin-bottom: 14px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat-box {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .stat-num {
+      font-size: 20px;
+      font-weight: 800;
+      color: #172554;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+
+    .cta-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-primary {
+      width: 100%;
+      min-height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: #1e3a8a;
+      color: #fef9c3;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      width: 100%;
+      min-height: 46px;
+      border: 1.5px solid #1e3a8a;
+      border-radius: 12px;
+      background: #fefce8;
+      color: #172554;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .guide-list {
+      margin-top: 8px;
+      padding-left: 18px;
+      font-size: 13.5px;
+      color: #1e3a8a;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* Search & Filter Controls */
+    .controls-plate {
+      background: #fef9c3;
+      border: 1px solid #fde047;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14);
+    }
+    .search-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 13px;
+      font-size: 14px;
+      color: #172554;
+      background: #ffffff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 10px;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    .search-input:focus {
+      border-color: #1e3a8a;
+    }
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .filter-btn {
+      min-height: 36px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid #1e3a8a;
+      background: #fefce8;
+      color: #172554;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .filter-btn.active {
+      background: #1e3a8a;
+      color: #fef9c3;
+    }
+
+    /* Grouped Grammar Topics */
+    .topic-group {
+      margin-bottom: 18px;
+    }
+    .topic-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #1e3a8a;
+      color: #fef9c3;
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .topic-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .topic-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: #bfdbfe;
+      white-space: nowrap;
+    }
+    .topic-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .kind-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #047857;
+    }
+    .open-hint {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1e40af;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 2px;
+    }
+    .card-sub {
+      font-size: 12.5px;
+      color: #1e3a8a;
+    }
+
+    .section-banner {
+      background: #1e3a8a;
+      color: #fef9c3;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 14px 0 8px;
+    }
+
+    .empty-msg {
+      display: none;
+      text-align: center;
+      padding: 28px 16px;
+      background: #fef9c3;
+      color: #172554;
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    /* Fixed Bottom Navigation Bar (3 Thumb-Zone Tabs) */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      height: 62px;
+      background: #064e3b;
+      border-top: 1.5px solid rgba(254, 249, 195, 0.3);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .nav-tab {
+      border: none;
+      background: transparent;
+      color: #bfdbfe;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 48px;
+      border-top: 3px solid transparent;
+    }
+    .nav-tab.active {
+      color: #fef9c3;
+      background: rgba(30, 58, 138, 0.45);
+      border-top-color: #fde047;
+    }
+    .nav-icon {
+      font-size: 15px;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <header class="app-topbar">
+    <div>
+      <div class="brand-title">Grammar Exercise</div>
+      <div class="brand-sub">NP Regmi · Rules, Compositions &amp; Quizzes</div>
+    </div>
+    <span class="brand-sub">42 Modules</span>
+  </header>
+
+  <!-- 1. INTRO SECTION -->
+  <section id="screen-intro" class="screen active">
+    <div class="hero-plate">
+      <div class="hero-kicker">Mobile English Grammar Studio</div>
+      <h1>Learn Rules, Read Compositions &amp; Play Quizzes</h1>
+      <p>
+        All 42 grammar exercises, reading rules, essays, and SEE practice sets
+        are revised, grouped by grammar topic, and ready to run offline on your Android phone.
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-num">10</div>
+          <div class="stat-lbl">Grammar Topics</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">35</div>
+          <div class="stat-lbl">Quizzes &amp; Sets</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">6</div>
+          <div class="stat-lbl">Reading Rules</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">1</div>
+          <div class="stat-lbl">Compositions</div>
+        </div>
+      </div>
+
+      <div class="cta-stack">
+        <button type="button" class="btn-primary" data-goto="content">
+          Open Grammar Content (10 Topics)
+        </button>
+        <button type="button" class="btn-secondary" data-goto="play">
+          Go to Play / Watch Section
+        </button>
+      </div>
+    </div>
+
+    <div class="plate-card">
+      <div class="card-title">How to Use This App</div>
+      <ol class="guide-list">
+        <li><strong>Intro:</strong> Overview of all grammar study modules.</li>
+        <li><strong>Content:</strong> Browse revised HTML lessons grouped by Grammar Topic, or filter by Rules, Quizzes, Compositions, and Practice Sets.</li>
+        <li><strong>Play / Watch:</strong> Watch interactive grammar rule slides or play quizzes directly—every HTML opens with its original design and background preserved.</li>
+        <li><strong>Back Button:</strong> Use your phone's Back button anytime to return to the topic list.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 2. CONTENT SECTION (GROUPED BY GRAMMAR TOPIC) -->
+  <section id="screen-content" class="screen">
+    <div class="controls-plate">
+      <input
+        id="grammarSearch"
+        class="search-input"
+        type="search"
+        placeholder="Search topic, rule, quiz, or essay..."
+      />
+      <div class="filter-row" id="kindFilters">
+        <button type="button" class="filter-btn active" data-filter="All">All (42)</button>
+        <button type="button" class="filter-btn" data-filter="Rules">Rules (6)</button>
+        <button type="button" class="filter-btn" data-filter="Quizzes">Quizzes (28)</button>
+        <button type="button" class="filter-btn" data-filter="Compositions">Compositions (1)</button>
+        <button type="button" class="filter-btn" data-filter="Practice">Practice (7)</button>
+      </div>
+    </div>
+
+    <div id="topicContainer">
+      <section class="topic-group" data-topic-group="Articles (a / an / the)">
+        <div class="topic-header">
+          <h2>Articles (a / an / the)</h2>
+          <span class="topic-count">5 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Article-Quiz-1.html" data-kind="Quizzes" data-title="Articles Quiz · Set 1 (a, an, the, zero)" data-topic="Articles (a / an / the)" data-search="articles (a / an / the) articles quiz · set 1 (a, an, the, zero) foundational article selection practice quizzes article-quiz-1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Articles Quiz · Set 1 (a, an, the, zero)</div>
+            <div class="card-sub">Foundational article selection practice</div>
+          </a>
+          <a class="plate-card module-link" href="Article-Quiz-2.html" data-kind="Quizzes" data-title="Advanced Articles Quiz · Set 2" data-topic="Articles (a / an / the)" data-search="articles (a / an / the) advanced articles quiz · set 2 exceptions, proper nouns, and zero article rules quizzes article-quiz-2.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Advanced Articles Quiz · Set 2</div>
+            <div class="card-sub">Exceptions, proper nouns, and zero article rules</div>
+          </a>
+          <a class="plate-card module-link" href="Article-Quiz-3.html" data-kind="Quizzes" data-title="Articles Quiz · Set 3" data-topic="Articles (a / an / the)" data-search="articles (a / an / the) articles quiz · set 3 context-based sentence completion quizzes article-quiz-3.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Articles Quiz · Set 3</div>
+            <div class="card-sub">Context-based sentence completion</div>
+          </a>
+          <a class="plate-card module-link" href="Article-Quiz-4.html" data-kind="Quizzes" data-title="Advanced Articles Quiz · Set 4" data-topic="Articles (a / an / the)" data-search="articles (a / an / the) advanced articles quiz · set 4 challenging board-exam article drills quizzes article-quiz-4.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Advanced Articles Quiz · Set 4</div>
+            <div class="card-sub">Challenging board-exam article drills</div>
+          </a>
+          <a class="plate-card module-link" href="Article-Quiz-5.html" data-kind="Quizzes" data-title="Expert Articles Quiz · Set 5" data-topic="Articles (a / an / the)" data-search="articles (a / an / the) expert articles quiz · set 5 mastery challenge across all article rules quizzes article-quiz-5.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Expert Articles Quiz · Set 5</div>
+            <div class="card-sub">Mastery challenge across all article rules</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Prepositions">
+        <div class="topic-header">
+          <h2>Prepositions</h2>
+          <span class="topic-count">9 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Preposition-Qiz-2.html" data-kind="Quizzes" data-title="Preposition Mega Quiz · 111 Questions" data-topic="Prepositions" data-search="prepositions preposition mega quiz · 111 questions full-length preposition question bank quizzes preposition-qiz-2.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Preposition Mega Quiz · 111 Questions</div>
+            <div class="card-sub">Full-length preposition question bank</div>
+          </a>
+          <a class="plate-card module-link" href="Prepositions-2nd-10-sets.html" data-kind="Quizzes" data-title="Preposition 10-Set Quiz · 100 MCQs" data-topic="Prepositions" data-search="prepositions preposition 10-set quiz · 100 mcqs ten structured multiple-choice sets quizzes prepositions-2nd-10-sets.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Preposition 10-Set Quiz · 100 MCQs</div>
+            <div class="card-sub">Ten structured multiple-choice sets</div>
+          </a>
+          <a class="plate-card module-link" href="Prepositions-Quiz3-mixed.html" data-kind="Quizzes" data-title="Mixed Prepositions Quiz" data-topic="Prepositions" data-search="prepositions mixed prepositions quiz mixed time, place &amp; phrasal prepositions quizzes prepositions-quiz3-mixed.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Mixed Prepositions Quiz</div>
+            <div class="card-sub">Mixed time, place &amp; phrasal prepositions</div>
+          </a>
+          <a class="plate-card module-link" href="Round-Preposition-Quiz-1.html" data-kind="Quizzes" data-title="Prepositions &amp; Vocabulary · Round 1" data-topic="Prepositions" data-search="prepositions prepositions &amp; vocabulary · round 1 timed classroom round quiz quizzes round-preposition-quiz-1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Prepositions &amp; Vocabulary · Round 1</div>
+            <div class="card-sub">Timed classroom round quiz</div>
+          </a>
+          <a class="plate-card module-link" href="Round-Preposition-Quiz-2.html" data-kind="Quizzes" data-title="Prepositions &amp; Vocabulary · Round 2" data-topic="Prepositions" data-search="prepositions prepositions &amp; vocabulary · round 2 second classroom competition round quizzes round-preposition-quiz-2.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Prepositions &amp; Vocabulary · Round 2</div>
+            <div class="card-sub">Second classroom competition round</div>
+          </a>
+          <a class="plate-card module-link" href="Rules-Preposition-1.html" data-kind="Rules" data-title="35 Prepositions · Interactive Rules &amp; Slides" data-topic="Prepositions" data-search="prepositions 35 prepositions · interactive rules &amp; slides visual rule slides for time, place &amp; direction rules rules-preposition-1.html">
+            <div class="card-top">
+              <span class="kind-label">Rules</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">35 Prepositions · Interactive Rules &amp; Slides</div>
+            <div class="card-sub">Visual rule slides for time, place &amp; direction</div>
+          </a>
+          <a class="plate-card module-link" href="Rules-Preposition-2.html" data-kind="Rules" data-title="Frequently Used Prepositions Guide" data-topic="Prepositions" data-search="prepositions frequently used prepositions guide common fixed prepositions and usage notes rules rules-preposition-2.html">
+            <div class="card-top">
+              <span class="kind-label">Rules</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Frequently Used Prepositions Guide</div>
+            <div class="card-sub">Common fixed prepositions and usage notes</div>
+          </a>
+          <a class="plate-card module-link" href="Preposition-Quiz-6-Sets.html" data-kind="Quizzes" data-title="Preposition Quiz · 6 Practice Sets" data-topic="Prepositions" data-search="prepositions preposition quiz · 6 practice sets six progressive preposition quiz rounds quizzes preposition-quiz-6-sets.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Preposition Quiz · 6 Practice Sets</div>
+            <div class="card-sub">Six progressive preposition quiz rounds</div>
+          </a>
+          <a class="plate-card module-link" href="prepositon-Quiz-3.html" data-kind="Quizzes" data-title="Preposition Fill-in-the-Blank Quiz" data-topic="Prepositions" data-search="prepositions preposition fill-in-the-blank quiz interactive blank completion drill quizzes prepositon-quiz-3.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Preposition Fill-in-the-Blank Quiz</div>
+            <div class="card-sub">Interactive blank completion drill</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Subject–Verb Agreement">
+        <div class="topic-header">
+          <h2>Subject–Verb Agreement</h2>
+          <span class="topic-count">6 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Rules-Sub-verb-agreement-2.html" data-kind="Rules" data-title="Subject–Verb Agreement · Study Guide" data-topic="Subject–Verb Agreement" data-search="subject–verb agreement subject–verb agreement · study guide comprehensive reference with examples rules rules-sub-verb-agreement-2.html">
+            <div class="card-top">
+              <span class="kind-label">Rules</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Subject–Verb Agreement · Study Guide</div>
+            <div class="card-sub">Comprehensive reference with examples</div>
+          </a>
+          <a class="plate-card module-link" href="Rules-Subject-verb-Agreement-1.html" data-kind="Rules" data-title="Subject–Verb Agreement · 40 Rules + Quiz" data-topic="Subject–Verb Agreement" data-search="subject–verb agreement subject–verb agreement · 40 rules + quiz core concord rules with instant self-check rules rules-subject-verb-agreement-1.html">
+            <div class="card-top">
+              <span class="kind-label">Rules</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Subject–Verb Agreement · 40 Rules + Quiz</div>
+            <div class="card-sub">Core concord rules with instant self-check</div>
+          </a>
+          <a class="plate-card module-link" href="Rules-Subject-verb-agreement-3.html" data-kind="Rules" data-title="100 Subject–Verb Agreement Slides" data-topic="Subject–Verb Agreement" data-search="subject–verb agreement 100 subject–verb agreement slides interactive rule-by-rule slide deck rules rules-subject-verb-agreement-3.html">
+            <div class="card-top">
+              <span class="kind-label">Rules</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">100 Subject–Verb Agreement Slides</div>
+            <div class="card-sub">Interactive rule-by-rule slide deck</div>
+          </a>
+          <a class="plate-card module-link" href="Subject-verb-Agreement2.html" data-kind="Quizzes" data-title="Subject–Verb Agreement Quiz · Set 2" data-topic="Subject–Verb Agreement" data-search="subject–verb agreement subject–verb agreement quiz · set 2 intermediate concord quiz quizzes subject-verb-agreement2.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Subject–Verb Agreement Quiz · Set 2</div>
+            <div class="card-sub">Intermediate concord quiz</div>
+          </a>
+          <a class="plate-card module-link" href="Subject-verb-agreement1.html" data-kind="Quizzes" data-title="Subject–Verb Agreement Quiz · Set 1" data-topic="Subject–Verb Agreement" data-search="subject–verb agreement subject–verb agreement quiz · set 1 singular, plural &amp; collective noun practice quizzes subject-verb-agreement1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Subject–Verb Agreement Quiz · Set 1</div>
+            <div class="card-sub">Singular, plural &amp; collective noun practice</div>
+          </a>
+          <a class="plate-card module-link" href="subject-verb-agreement40.html" data-kind="Quizzes" data-title="Subject–Verb Agreement · 40 Questions" data-topic="Subject–Verb Agreement" data-search="subject–verb agreement subject–verb agreement · 40 questions forty-question exam drill quizzes subject-verb-agreement40.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Subject–Verb Agreement · 40 Questions</div>
+            <div class="card-sub">Forty-question exam drill</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Tenses &amp; Negation">
+        <div class="topic-header">
+          <h2>Tenses &amp; Negation</h2>
+          <span class="topic-count">3 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Cdc-5-Set-Tricky-Negation-Quiz.html" data-kind="Quizzes" data-title="CDC 5-Set Tricky Negation &amp; Transformation" data-topic="Tenses &amp; Negation" data-search="tenses &amp; negation cdc 5-set tricky negation &amp; transformation negative, affirmative &amp; question tag drills quizzes cdc-5-set-tricky-negation-quiz.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">CDC 5-Set Tricky Negation &amp; Transformation</div>
+            <div class="card-sub">Negative, affirmative &amp; question tag drills</div>
+          </a>
+          <a class="plate-card module-link" href="Round-Tense-Quiz-1.html" data-kind="Quizzes" data-title="Advanced Tense Quiz Competition" data-topic="Tenses &amp; Negation" data-search="tenses &amp; negation advanced tense quiz competition fast-paced tense mastery round quizzes round-tense-quiz-1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Advanced Tense Quiz Competition</div>
+            <div class="card-sub">Fast-paced tense mastery round</div>
+          </a>
+          <a class="plate-card module-link" href="Tense-qiuz-1.html" data-kind="Quizzes" data-title="Tenses Foundation Quiz" data-topic="Tenses &amp; Negation" data-search="tenses &amp; negation tenses foundation quiz present, past &amp; future verb forms quizzes tense-qiuz-1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Tenses Foundation Quiz</div>
+            <div class="card-sub">Present, past &amp; future verb forms</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Active &amp; Passive Voice">
+        <div class="topic-header">
+          <h2>Active &amp; Passive Voice</h2>
+          <span class="topic-count">3 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Round-PassiveToActiveQuiz1.html" data-kind="Quizzes" data-title="Passive to Active Voice · Round Quiz" data-topic="Active &amp; Passive Voice" data-search="active &amp; passive voice passive to active voice · round quiz reverse voice transformation practice quizzes round-passivetoactivequiz1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Passive to Active Voice · Round Quiz</div>
+            <div class="card-sub">Reverse voice transformation practice</div>
+          </a>
+          <a class="plate-card module-link" href="Wh-Question-Passive-Practice.html" data-kind="Quizzes" data-title="Wh-Question Active → Passive Practice" data-topic="Active &amp; Passive Voice" data-search="active &amp; passive voice wh-question active → passive practice interrogative passive voice exercises quizzes wh-question-passive-practice.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Wh-Question Active → Passive Practice</div>
+            <div class="card-sub">Interrogative passive voice exercises</div>
+          </a>
+          <a class="plate-card module-link" href="active-n-passive-quiz1.html" data-kind="Quizzes" data-title="Voice Forge · Active to Passive Quiz" data-topic="Active &amp; Passive Voice" data-search="active &amp; passive voice voice forge · active to passive quiz transform active sentences into passive voice quizzes active-n-passive-quiz1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Voice Forge · Active to Passive Quiz</div>
+            <div class="card-sub">Transform active sentences into passive voice</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Reported Speech (Direct &amp; Indirect)">
+        <div class="topic-header">
+          <h2>Reported Speech (Direct &amp; Indirect)</h2>
+          <span class="topic-count">4 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Reported-Speech-Direct-Indirect-30-Mcqs.html" data-kind="Quizzes" data-title="Direct &amp; Indirect Speech · 30 MCQs" data-topic="Reported Speech (Direct &amp; Indirect)" data-search="reported speech (direct &amp; indirect) direct &amp; indirect speech · 30 mcqs multiple-choice speech conversion drill quizzes reported-speech-direct-indirect-30-mcqs.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Direct &amp; Indirect Speech · 30 MCQs</div>
+            <div class="card-sub">Multiple-choice speech conversion drill</div>
+          </a>
+          <a class="plate-card module-link" href="Reported-SpeechIndirect-Quiz-1.html" data-kind="Quizzes" data-title="91-Question Reported Speech Quiz" data-topic="Reported Speech (Direct &amp; Indirect)" data-search="reported speech (direct &amp; indirect) 91-question reported speech quiz statements, questions &amp; commands quizzes reported-speechindirect-quiz-1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">91-Question Reported Speech Quiz</div>
+            <div class="card-sub">Statements, questions &amp; commands</div>
+          </a>
+          <a class="plate-card module-link" href="Reported-SpeechIndirect-Quiz-2%20.html" data-kind="Quizzes" data-title="Reported Speech Quiz · Set 2" data-topic="Reported Speech (Direct &amp; Indirect)" data-search="reported speech (direct &amp; indirect) reported speech quiz · set 2 tense backshift and pronoun changes quizzes reported-speechindirect-quiz-2 .html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Reported Speech Quiz · Set 2</div>
+            <div class="card-sub">Tense backshift and pronoun changes</div>
+          </a>
+          <a class="plate-card module-link" href="Reported-speechBoth_50.html" data-kind="Quizzes" data-title="Direct ↔ Indirect Speech · 50 Questions" data-topic="Reported Speech (Direct &amp; Indirect)" data-search="reported speech (direct &amp; indirect) direct ↔ indirect speech · 50 questions two-way conversion for see class 10 quizzes reported-speechboth_50.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Direct ↔ Indirect Speech · 50 Questions</div>
+            <div class="card-sub">Two-way conversion for SEE Class 10</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Conditional Sentences (If-Clauses)">
+        <div class="topic-header">
+          <h2>Conditional Sentences (If-Clauses)</h2>
+          <span class="topic-count">3 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="IFcondition-Quiz-1.html" data-kind="Quizzes" data-title="Conditional Sentences · Mixed Set 1" data-topic="Conditional Sentences (If-Clauses)" data-search="conditional sentences (if-clauses) conditional sentences · mixed set 1 zero, first, second &amp; third conditionals quizzes ifcondition-quiz-1.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Conditional Sentences · Mixed Set 1</div>
+            <div class="card-sub">Zero, first, second &amp; third conditionals</div>
+          </a>
+          <a class="plate-card module-link" href="IFcondition-Quiz-2.html" data-kind="Quizzes" data-title="Conditional Sentences Quiz · Set 2" data-topic="Conditional Sentences (If-Clauses)" data-search="conditional sentences (if-clauses) conditional sentences quiz · set 2 if-clause verb tense practice quizzes ifcondition-quiz-2.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Conditional Sentences Quiz · Set 2</div>
+            <div class="card-sub">If-clause verb tense practice</div>
+          </a>
+          <a class="plate-card module-link" href="IFcondtion-Quiz-3.html" data-kind="Quizzes" data-title="Smartboard Conditional Sentences (6×5)" data-topic="Conditional Sentences (If-Clauses)" data-search="conditional sentences (if-clauses) smartboard conditional sentences (6×5) 30 interactive conditional challenges quizzes ifcondtion-quiz-3.html">
+            <div class="card-top">
+              <span class="kind-label">Quizzes</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Smartboard Conditional Sentences (6×5)</div>
+            <div class="card-sub">30 interactive conditional challenges</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Conjunctions">
+        <div class="topic-header">
+          <h2>Conjunctions</h2>
+          <span class="topic-count">1 item</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Rule-Conjunction.html" data-kind="Rules" data-title="Comprehensive Study Guide: Conjunctions" data-topic="Conjunctions" data-search="conjunctions comprehensive study guide: conjunctions coordinating, subordinating &amp; correlative rules rules rule-conjunction.html">
+            <div class="card-top">
+              <span class="kind-label">Rules</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Comprehensive Study Guide: Conjunctions</div>
+            <div class="card-sub">Coordinating, subordinating &amp; correlative rules</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="Compositions &amp; Essays">
+        <div class="topic-header">
+          <h2>Compositions &amp; Essays</h2>
+          <span class="topic-count">1 item</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Essay-women-empowerment-nepal.html" data-kind="Compositions" data-title="Essay Composition: Women Empowerment in Nepal" data-topic="Compositions &amp; Essays" data-search="compositions &amp; essays essay composition: women empowerment in nepal structured model essay &amp; writing guide compositions essay-women-empowerment-nepal.html">
+            <div class="card-top">
+              <span class="kind-label">Compositions</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Essay Composition: Women Empowerment in Nepal</div>
+            <div class="card-sub">Structured model essay &amp; writing guide</div>
+          </a>
+        </div>
+      </section>
+      <section class="topic-group" data-topic-group="SEE &amp; Mixed Grammar Practice">
+        <div class="topic-header">
+          <h2>SEE &amp; Mixed Grammar Practice</h2>
+          <span class="topic-count">7 items</span>
+        </div>
+        <div class="topic-cards">
+          <a class="plate-card module-link" href="Cdc-5-Set-Vibrant-Quiz.html" data-kind="Practice" data-title="CDC 5-Set Mixed Grammar Quiz" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice cdc 5-set mixed grammar quiz curriculum-aligned 5-set grammar quiz practice cdc-5-set-vibrant-quiz.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">CDC 5-Set Mixed Grammar Quiz</div>
+            <div class="card-sub">Curriculum-aligned 5-set grammar quiz</div>
+          </a>
+          <a class="plate-card module-link" href="Eng-Grammar-5sets.G9-G10.html" data-kind="Practice" data-title="Grade 9 &amp; 10 SEE Q9 &amp; Q10 Practice (5 Sets)" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice grade 9 &amp; 10 see q9 &amp; q10 practice (5 sets) exam-pattern grammar sets for g9–g10 practice eng-grammar-5sets.g9-g10.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Grade 9 &amp; 10 SEE Q9 &amp; Q10 Practice (5 Sets)</div>
+            <div class="card-sub">Exam-pattern grammar sets for G9–G10</div>
+          </a>
+          <a class="plate-card module-link" href="Nepal-eng-G5-15sets-Grammar.html" data-kind="Practice" data-title="Stepwise Grammar MCQ · 15 Sets" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice stepwise grammar mcq · 15 sets fifteen progressive grammar sets practice nepal-eng-g5-15sets-grammar.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">Stepwise Grammar MCQ · 15 Sets</div>
+            <div class="card-sub">Fifteen progressive grammar sets</div>
+          </a>
+          <a class="plate-card module-link" href="SEE-Practice-Set-1-SEE.html" data-kind="Practice" data-title="SEE English Grammar Practice · Set 1" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice see english grammar practice · set 1 mixed grammar board preparation quiz practice see-practice-set-1-see.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">SEE English Grammar Practice · Set 1</div>
+            <div class="card-sub">Mixed grammar board preparation quiz</div>
+          </a>
+          <a class="plate-card module-link" href="SEE-Practice-set-2-SEE.html" data-kind="Practice" data-title="SEE Grammar Practice · Set 2" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice see grammar practice · set 2 second full see mixed practice set practice see-practice-set-2-see.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">SEE Grammar Practice · Set 2</div>
+            <div class="card-sub">Second full SEE mixed practice set</div>
+          </a>
+          <a class="plate-card module-link" href="SEE-Practice-set-Mixed%20-1.html" data-kind="Practice" data-title="SEE Mixed Grammar Practice · 10 Sets" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice see mixed grammar practice · 10 sets ten comprehensive exam practice sets practice see-practice-set-mixed -1.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">SEE Mixed Grammar Practice · 10 Sets</div>
+            <div class="card-sub">Ten comprehensive exam practice sets</div>
+          </a>
+          <a class="plate-card module-link" href="See-English-Q10-fill-in.html" data-kind="Practice" data-title="SEE English Q10 Fill-in-the-Blank Practice" data-topic="SEE &amp; Mixed Grammar Practice" data-search="see &amp; mixed grammar practice see english q10 fill-in-the-blank practice interactive contextual grammar fill-ins practice see-english-q10-fill-in.html">
+            <div class="card-top">
+              <span class="kind-label">Practice</span>
+              <span class="open-hint">Open</span>
+            </div>
+            <div class="card-title">SEE English Q10 Fill-in-the-Blank Practice</div>
+            <div class="card-sub">Interactive contextual grammar fill-ins</div>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <div id="contentEmpty" class="empty-msg">
+      No grammar lessons matched your search or filter.
+    </div>
+  </section>
+
+  <!-- 3. PLAY OR WATCH SECTION -->
+  <section id="screen-play" class="screen">
+    <div class="hero-plate">
+      <div class="hero-kicker">Play &amp; Watch Deck</div>
+      <h1>Launch Interactive Quizzes &amp; Rule Slides</h1>
+      <p>
+        Tap any item below to open it full-screen. Each HTML module keeps its original
+        background format, animations, and interactive scoring.
+      </p>
+    </div>
+
+    <div id="recentSection" style="display:none;">
+      <div class="section-banner">Recently Played / Watched</div>
+      <div id="recentList" class="topic-cards"></div>
+    </div>
+
+    <div class="section-banner">Watch: Interactive Rules &amp; Compositions (7)</div>
+    <div class="topic-cards">
+      <a class="plate-card module-link" href="Essay-women-empowerment-nepal.html" data-title="Essay Composition: Women Empowerment in Nepal" data-topic="Compositions &amp; Essays" data-kind="Compositions">
+        <div class="card-top">
+          <span class="kind-label">Compositions &amp; Essays</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">Essay Composition: Women Empowerment in Nepal</div>
+        <div class="card-sub">Structured model essay &amp; writing guide</div>
+      </a>
+      <a class="plate-card module-link" href="Rule-Conjunction.html" data-title="Comprehensive Study Guide: Conjunctions" data-topic="Conjunctions" data-kind="Rules">
+        <div class="card-top">
+          <span class="kind-label">Conjunctions</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">Comprehensive Study Guide: Conjunctions</div>
+        <div class="card-sub">Coordinating, subordinating &amp; correlative rules</div>
+      </a>
+      <a class="plate-card module-link" href="Rules-Preposition-1.html" data-title="35 Prepositions · Interactive Rules &amp; Slides" data-topic="Prepositions" data-kind="Rules">
+        <div class="card-top">
+          <span class="kind-label">Prepositions</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">35 Prepositions · Interactive Rules &amp; Slides</div>
+        <div class="card-sub">Visual rule slides for time, place &amp; direction</div>
+      </a>
+      <a class="plate-card module-link" href="Rules-Preposition-2.html" data-title="Frequently Used Prepositions Guide" data-topic="Prepositions" data-kind="Rules">
+        <div class="card-top">
+          <span class="kind-label">Prepositions</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">Frequently Used Prepositions Guide</div>
+        <div class="card-sub">Common fixed prepositions and usage notes</div>
+      </a>
+      <a class="plate-card module-link" href="Rules-Sub-verb-agreement-2.html" data-title="Subject–Verb Agreement · Study Guide" data-topic="Subject–Verb Agreement" data-kind="Rules">
+        <div class="card-top">
+          <span class="kind-label">Subject–Verb Agreement</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">Subject–Verb Agreement · Study Guide</div>
+        <div class="card-sub">Comprehensive reference with examples</div>
+      </a>
+      <a class="plate-card module-link" href="Rules-Subject-verb-Agreement-1.html" data-title="Subject–Verb Agreement · 40 Rules + Quiz" data-topic="Subject–Verb Agreement" data-kind="Rules">
+        <div class="card-top">
+          <span class="kind-label">Subject–Verb Agreement</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">Subject–Verb Agreement · 40 Rules + Quiz</div>
+        <div class="card-sub">Core concord rules with instant self-check</div>
+      </a>
+      <a class="plate-card module-link" href="Rules-Subject-verb-agreement-3.html" data-title="100 Subject–Verb Agreement Slides" data-topic="Subject–Verb Agreement" data-kind="Rules">
+        <div class="card-top">
+          <span class="kind-label">Subject–Verb Agreement</span>
+          <span class="open-hint">Watch / Read</span>
+        </div>
+        <div class="card-title">100 Subject–Verb Agreement Slides</div>
+        <div class="card-sub">Interactive rule-by-rule slide deck</div>
+      </a>
+    </div>
+
+    <div class="section-banner">Play: Featured Grammar Quizzes</div>
+    <div class="topic-cards">
+      <a class="plate-card module-link" href="Article-Quiz-1.html" data-title="Articles Quiz · Set 1 (a, an, the, zero)" data-topic="Articles (a / an / the)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Articles (a / an / the)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Articles Quiz · Set 1 (a, an, the, zero)</div>
+        <div class="card-sub">Foundational article selection practice</div>
+      </a>
+      <a class="plate-card module-link" href="Article-Quiz-2.html" data-title="Advanced Articles Quiz · Set 2" data-topic="Articles (a / an / the)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Articles (a / an / the)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Advanced Articles Quiz · Set 2</div>
+        <div class="card-sub">Exceptions, proper nouns, and zero article rules</div>
+      </a>
+      <a class="plate-card module-link" href="Article-Quiz-3.html" data-title="Articles Quiz · Set 3" data-topic="Articles (a / an / the)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Articles (a / an / the)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Articles Quiz · Set 3</div>
+        <div class="card-sub">Context-based sentence completion</div>
+      </a>
+      <a class="plate-card module-link" href="Article-Quiz-4.html" data-title="Advanced Articles Quiz · Set 4" data-topic="Articles (a / an / the)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Articles (a / an / the)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Advanced Articles Quiz · Set 4</div>
+        <div class="card-sub">Challenging board-exam article drills</div>
+      </a>
+      <a class="plate-card module-link" href="Article-Quiz-5.html" data-title="Expert Articles Quiz · Set 5" data-topic="Articles (a / an / the)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Articles (a / an / the)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Expert Articles Quiz · Set 5</div>
+        <div class="card-sub">Mastery challenge across all article rules</div>
+      </a>
+      <a class="plate-card module-link" href="Cdc-5-Set-Tricky-Negation-Quiz.html" data-title="CDC 5-Set Tricky Negation &amp; Transformation" data-topic="Tenses &amp; Negation" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Tenses &amp; Negation</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">CDC 5-Set Tricky Negation &amp; Transformation</div>
+        <div class="card-sub">Negative, affirmative &amp; question tag drills</div>
+      </a>
+      <a class="plate-card module-link" href="Cdc-5-Set-Vibrant-Quiz.html" data-title="CDC 5-Set Mixed Grammar Quiz" data-topic="SEE &amp; Mixed Grammar Practice" data-kind="Practice">
+        <div class="card-top">
+          <span class="kind-label">SEE &amp; Mixed Grammar Practice</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">CDC 5-Set Mixed Grammar Quiz</div>
+        <div class="card-sub">Curriculum-aligned 5-set grammar quiz</div>
+      </a>
+      <a class="plate-card module-link" href="Eng-Grammar-5sets.G9-G10.html" data-title="Grade 9 &amp; 10 SEE Q9 &amp; Q10 Practice (5 Sets)" data-topic="SEE &amp; Mixed Grammar Practice" data-kind="Practice">
+        <div class="card-top">
+          <span class="kind-label">SEE &amp; Mixed Grammar Practice</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Grade 9 &amp; 10 SEE Q9 &amp; Q10 Practice (5 Sets)</div>
+        <div class="card-sub">Exam-pattern grammar sets for G9–G10</div>
+      </a>
+      <a class="plate-card module-link" href="IFcondition-Quiz-1.html" data-title="Conditional Sentences · Mixed Set 1" data-topic="Conditional Sentences (If-Clauses)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Conditional Sentences (If-Clauses)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Conditional Sentences · Mixed Set 1</div>
+        <div class="card-sub">Zero, first, second &amp; third conditionals</div>
+      </a>
+      <a class="plate-card module-link" href="IFcondition-Quiz-2.html" data-title="Conditional Sentences Quiz · Set 2" data-topic="Conditional Sentences (If-Clauses)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Conditional Sentences (If-Clauses)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Conditional Sentences Quiz · Set 2</div>
+        <div class="card-sub">If-clause verb tense practice</div>
+      </a>
+      <a class="plate-card module-link" href="IFcondtion-Quiz-3.html" data-title="Smartboard Conditional Sentences (6×5)" data-topic="Conditional Sentences (If-Clauses)" data-kind="Quizzes">
+        <div class="card-top">
+          <span class="kind-label">Conditional Sentences (If-Clauses)</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Smartboard Conditional Sentences (6×5)</div>
+        <div class="card-sub">30 interactive conditional challenges</div>
+      </a>
+      <a class="plate-card module-link" href="Nepal-eng-G5-15sets-Grammar.html" data-title="Stepwise Grammar MCQ · 15 Sets" data-topic="SEE &amp; Mixed Grammar Practice" data-kind="Practice">
+        <div class="card-top">
+          <span class="kind-label">SEE &amp; Mixed Grammar Practice</span>
+          <span class="open-hint">Play Quiz</span>
+        </div>
+        <div class="card-title">Stepwise Grammar MCQ · 15 Sets</div>
+        <div class="card-sub">Fifteen progressive grammar sets</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- BOTTOM THUMB-ZONE NAVIGATION -->
+  <nav class="bottom-nav" aria-label="Main sections">
+    <button type="button" class="nav-tab active" data-tab="intro">
+      <span class="nav-icon" aria-hidden="true">&#9733;</span>
+      <span>Intro</span>
+    </button>
+    <button type="button" class="nav-tab" data-tab="content">
+      <span class="nav-icon" aria-hidden="true">&#9776;</span>
+      <span>Content</span>
+    </button>
+    <button type="button" class="nav-tab" data-tab="play">
+      <span class="nav-icon" aria-hidden="true">&#9654;</span>
+      <span>Play / Watch</span>
+    </button>
+  </nav>
+
+  <script>
+    (function () {
+      var RECENT_KEY = 'grammar_exercise_recent_v1';
+      var screens = {
+        intro: document.getElementById('screen-intro'),
+        content: document.getElementById('screen-content'),
+        play: document.getElementById('screen-play')
+      };
+      var navTabs = Array.prototype.slice.call(document.querySelectorAll('.nav-tab'));
+
+      function switchTab(tabName) {
+        Object.keys(screens).forEach(function (k) {
+          if (screens[k]) screens[k].classList.toggle('active', k === tabName);
+        });
+        navTabs.forEach(function (btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-tab') === tabName);
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      navTabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          switchTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      document.querySelectorAll('[data-goto]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          switchTab(btn.getAttribute('data-goto'));
+        });
+      });
+
+      // Content Search & Kind Filter
+      var searchInput = document.getElementById('grammarSearch');
+      var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+      var topicGroups = Array.prototype.slice.call(document.querySelectorAll('.topic-group'));
+      var emptyMsg = document.getElementById('contentEmpty');
+      var activeFilter = 'All';
+
+      function applyFilters() {
+        var q = (searchInput.value || '').trim().toLowerCase();
+        var totalVisible = 0;
+
+        topicGroups.forEach(function (group) {
+          var cards = Array.prototype.slice.call(group.querySelectorAll('.module-link'));
+          var groupVisible = 0;
+          cards.forEach(function (card) {
+            var kind = card.getAttribute('data-kind') || '';
+            var hay = card.getAttribute('data-search') || '';
+            var matchFilter = activeFilter === 'All' || kind === activeFilter;
+            var matchSearch = !q || hay.indexOf(q) !== -1;
+            var show = matchFilter && matchSearch;
+            card.style.display = show ? 'block' : 'none';
+            if (show) {
+              groupVisible += 1;
+              totalVisible += 1;
+            }
+          });
+          group.style.display = groupVisible > 0 ? 'block' : 'none';
+        });
+
+        if (emptyMsg) {
+          emptyMsg.style.display = totalVisible === 0 ? 'block' : 'none';
+        }
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+      }
+
+      filterBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          activeFilter = btn.getAttribute('data-filter') || 'All';
+          filterBtns.forEach(function (b) {
+            b.classList.toggle('active', b === btn);
+          });
+          applyFilters();
+        });
+      });
+
+      // Track Recently Played / Watched modules
+      function loadRecent() {
+        try {
+          return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function renderRecent() {
+        var recent = loadRecent();
+        var section = document.getElementById('recentSection');
+        var list = document.getElementById('recentList');
+        if (!section || !list) return;
+        if (!recent.length) {
+          section.style.display = 'none';
+          return;
+        }
+        section.style.display = 'block';
+        list.innerHTML = '';
+        recent.forEach(function (entry) {
+          var a = document.createElement('a');
+          a.className = 'plate-card';
+          a.href = entry.href;
+          a.innerHTML =
+            '<div class="card-top"><span class="kind-label">' +
+            entry.topic +
+            '</span><span class="open-hint">Resume</span></div>' +
+            '<div class="card-title">' +
+            entry.title +
+            '</div>';
+          list.appendChild(a);
+        });
+      }
+
+      document.querySelectorAll('.module-link').forEach(function (link) {
+        link.addEventListener('click', function () {
+          try {
+            var entry = {
+              href: link.getAttribute('href'),
+              title: link.getAttribute('data-title') || 'Module',
+              topic: link.getAttribute('data-topic') || 'Grammar',
+            };
+            var recent = loadRecent().filter(function (x) { return x.href !== entry.href; });
+            recent.unshift(entry);
+            localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, 4)));
+          } catch (e) {}
+        });
+      });
+
+      renderRecent();
+    })();
+  </script>
+</body>
+</html>
